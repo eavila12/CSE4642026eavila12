@@ -38,4 +38,16 @@ final class DotGraphIOTest {
     assertTrue(Files.exists(out));
     assertTrue(Files.size(out) > 0);
   }
+
+  @Test
+  void feature2_addNode_addNodes_duplicateChecks() {
+    DirectedGraph g = new DirectedGraph();
+
+    assertTrue(g.addNode("a"));
+    assertFalse(g.addNode("a"));
+
+    int added = g.addNodes(new String[] {"a", "b", "b", "c"});
+    assertEquals(2, added);
+    assertEquals(3, g.getNodes().size());
+  }
 }

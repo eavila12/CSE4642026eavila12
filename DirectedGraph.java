@@ -4,11 +4,28 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public final class DirectedGraph {
   private final LinkedHashSet<String> nodes = new LinkedHashSet<>();
   private final LinkedHashMap<String, LinkedHashSet<String>> edges = new LinkedHashMap<>();
+
+  public boolean addNode(String label) {
+    validateLabel(label);
+    return nodes.add(label);
+  }
+
+  public int addNodes(String[] labels) {
+    Objects.requireNonNull(labels, "labels");
+    int added = 0;
+    for (String label : labels) {
+      if (addNode(label)) {
+        added++;
+      }
+    }
+    return added;
+  }
 
   void addNodeInternal(String label) {
     nodes.add(label);
@@ -47,5 +64,11 @@ public final class DirectedGraph {
       }
     }
     return sb.toString();
+  }
+
+  private static void validateLabel(String label) {
+    if (label == null || label.isBlank()) {
+      throw new IllegalArgumentException("Node label must be non-empty.");
+    }
   }
 }
