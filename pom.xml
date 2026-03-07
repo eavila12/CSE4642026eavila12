@@ -6,7 +6,6 @@
   <groupId>edu.asu.cse464</groupId>
   <artifactId>cse464-dot-graph</artifactId>
   <version>1.0.0</version>
-  <name>cse464-dot-graph</name>
 
   <properties>
     <maven.compiler.source>11</maven.compiler.source>

@@ -52,9 +52,30 @@ public final class DirectedGraph {
     return sb.toString();
   }
 
+  public String toDot() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("digraph G {").append(System.lineSeparator());
+    for (String n : nodes) {
+      sb.append("  ").append(escapeId(n)).append(";").append(System.lineSeparator());
+    }
+    for (DirectedEdge e : edges) {
+      sb.append("  ").append(escapeId(e.src())).append(" -> ").append(escapeId(e.dst())).append(";")
+          .append(System.lineSeparator());
+    }
+    sb.append("}").append(System.lineSeparator());
+    return sb.toString();
+  }
+
   private static void validateLabel(String label) {
     if (label == null || label.isBlank()) {
       throw new IllegalArgumentException("Node label must be non-empty.");
     }
+  }
+
+  private static String escapeId(String id) {
+    boolean simple = id.matches("[A-Za-z_][A-Za-z0-9_]*");
+    if (simple) return id;
+    String escaped = id.replace("\\", "\\\\").replace("\"", "\\\"");
+    return "\"" + escaped + "\"";
   }
 }

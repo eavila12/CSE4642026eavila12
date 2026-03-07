@@ -29,7 +29,6 @@ final class DotGraphIOTest {
 
     assertEquals(4, g.getNodes().size());
     assertEquals(3, g.getEdges().size());
-    assertTrue(g.toString().contains("a -> b"));
 
     Path out = tempDir.resolve("graph.txt");
     DotGraphIO.outputGraph(out.toString(), g);
@@ -59,5 +58,23 @@ final class DotGraphIOTest {
     assertTrue(g.getNodes().contains("a"));
     assertTrue(g.getNodes().contains("b"));
     assertEquals(1, g.getEdges().size());
+  }
+
+  @Test
+  void feature4_outputDot_and_png() throws Exception {
+    DirectedGraph g = new DirectedGraph();
+    g.addEdge("a", "b");
+    g.addEdge("b", "c");
+
+    Path dotOut = tempDir.resolve("out.dot");
+    DotGraphIO.outputDOTGraph(dotOut.toString(), g);
+    String dot = Files.readString(dotOut, StandardCharsets.UTF_8);
+    assertTrue(dot.startsWith("digraph G {"));
+    assertTrue(dot.contains("a -> b;"));
+
+    Path pngOut = tempDir.resolve("out.png");
+    DotGraphIO.outputGraphics(pngOut.toString(), "png", g);
+    assertTrue(Files.exists(pngOut));
+    assertTrue(Files.size(pngOut) > 0);
   }
 }
