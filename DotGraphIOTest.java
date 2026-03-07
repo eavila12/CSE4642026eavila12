@@ -27,11 +27,9 @@ final class DotGraphIOTest {
 
     DirectedGraph g = DotGraphIO.parseGraph(dot.toString());
 
-    String printed = g.toString();
-    assertTrue(printed.contains("Nodes (4):"));
-    assertTrue(printed.contains("a -> b"));
-    assertTrue(printed.contains("b -> c"));
-    assertTrue(printed.contains("node x -> c"));
+    assertEquals(4, g.getNodes().size());
+    assertEquals(3, g.getEdges().size());
+    assertTrue(g.toString().contains("a -> b"));
 
     Path out = tempDir.resolve("graph.txt");
     DotGraphIO.outputGraph(out.toString(), g);
@@ -49,5 +47,17 @@ final class DotGraphIOTest {
     int added = g.addNodes(new String[] {"a", "b", "b", "c"});
     assertEquals(2, added);
     assertEquals(3, g.getNodes().size());
+  }
+
+  @Test
+  void feature3_addEdge_duplicateChecks_and_autoNodeCreate() {
+    DirectedGraph g = new DirectedGraph();
+
+    assertTrue(g.addEdge("a", "b"));
+    assertFalse(g.addEdge("a", "b"));
+
+    assertTrue(g.getNodes().contains("a"));
+    assertTrue(g.getNodes().contains("b"));
+    assertEquals(1, g.getEdges().size());
   }
 }

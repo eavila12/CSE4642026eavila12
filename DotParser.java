@@ -44,12 +44,12 @@ final class DotParser {
           chain.add(ts.consumeIdOrString());
         }
         for (int i = 0; i < chain.size() - 1; i++) {
-          g.addEdgeInternal(chain.get(i), chain.get(i + 1));
+          g.addEdge(chain.get(i), chain.get(i + 1));
         }
         skipAttributes(ts);
         ts.consumeOptional(";");
       } else {
-        g.addNodeInternal(left);
+        g.addNode(left);
         skipAttributes(ts);
         ts.consumeOptional(";");
       }

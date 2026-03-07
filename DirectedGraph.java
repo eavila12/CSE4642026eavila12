@@ -1,15 +1,13 @@
 package edu.asu.cse464.dot;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public final class DirectedGraph {
   private final LinkedHashSet<String> nodes = new LinkedHashSet<>();
-  private final LinkedHashMap<String, LinkedHashSet<String>> edges = new LinkedHashMap<>();
+  private final LinkedHashSet<DirectedEdge> edges = new LinkedHashSet<>();
 
   public boolean addNode(String label) {
     validateLabel(label);
@@ -27,41 +25,29 @@ public final class DirectedGraph {
     return added;
   }
 
-  void addNodeInternal(String label) {
-    nodes.add(label);
-  }
-
-  void addEdgeInternal(String src, String dst) {
-    nodes.add(src);
-    nodes.add(dst);
-    edges.computeIfAbsent(src, k -> new LinkedHashSet<>()).add(dst);
+  public boolean addEdge(String srcLabel, String dstLabel) {
+    validateLabel(srcLabel);
+    validateLabel(dstLabel);
+    nodes.add(srcLabel);
+    nodes.add(dstLabel);
+    return edges.add(new DirectedEdge(srcLabel, dstLabel));
   }
 
   public Set<String> getNodes() {
     return Collections.unmodifiableSet(nodes);
   }
 
-  public Map<String, Set<String>> getAdjacency() {
-    Map<String, Set<String>> out = new LinkedHashMap<>();
-    for (Map.Entry<String, LinkedHashSet<String>> e : edges.entrySet()) {
-      out.put(e.getKey(), Collections.unmodifiableSet(e.getValue()));
-    }
-    return Collections.unmodifiableMap(out);
+  public Set<DirectedEdge> getEdges() {
+    return Collections.unmodifiableSet(edges);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Nodes (").append(nodes.size()).append("): ").append(nodes).append(System.lineSeparator());
-    int edgeCount = 0;
-    for (LinkedHashSet<String> dsts : edges.values()) {
-      edgeCount += dsts.size();
-    }
-    sb.append("Edges (").append(edgeCount).append("):").append(System.lineSeparator());
-    for (Map.Entry<String, LinkedHashSet<String>> e : edges.entrySet()) {
-      for (String dst : e.getValue()) {
-        sb.append("  ").append(e.getKey()).append(" -> ").append(dst).append(System.lineSeparator());
-      }
+    sb.append("Edges (").append(edges.size()).append("):").append(System.lineSeparator());
+    for (DirectedEdge e : edges) {
+      sb.append("  ").append(e.src()).append(" -> ").append(e.dst()).append(System.lineSeparator());
     }
     return sb.toString();
   }
