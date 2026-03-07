@@ -47,12 +47,17 @@ public final class DotGraphIO {
       throw new IllegalArgumentException("format must be non-empty (e.g., png).");
     }
 
-    Format f = switch (format.toLowerCase()) {
-      case "png" -> Format.PNG;
-      case "svg" -> Format.SVG;
-      case "pdf" -> Format.PDF;
-      default -> throw new IllegalArgumentException("Unsupported format: " + format + " (support: png, svg, pdf)");
-    };
+    Format f;
+switch (format.toLowerCase()) {
+  case "png":
+    f = Format.PNG;
+    break;
+  case "svg":
+    f = Format.SVG;
+    break;
+  default:
+    throw new IllegalArgumentException("Unsupported format: " + format + " (support: png, svg)");
+}
 
     Path out = Path.of(path);
     Path parent = out.toAbsolutePath().getParent();
