@@ -34,6 +34,6 @@ digraph G {
 }
 
 The plain text out put is 
-
+![Alt text](output.png)
 
 and the image should be
