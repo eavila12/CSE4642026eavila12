@@ -1,9 +1,6 @@
 package edu.asu.cse464.dot;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public final class DirectedGraph {
   private final LinkedHashSet<String> nodes = new LinkedHashSet<>();
@@ -31,6 +28,43 @@ public final class DirectedGraph {
     nodes.add(srcLabel);
     nodes.add(dstLabel);
     return edges.add(new DirectedEdge(srcLabel, dstLabel));
+  }
+
+  public void removeNode(String label) {
+    validateLabel(label);
+    if (!nodes.contains(label)) {
+      throw new IllegalArgumentException("Node does not exist: " + label);
+    }
+
+    nodes.remove(label);
+    edges.removeIf(e -> e.src().equals(label) || e.dst().equals(label));
+  }
+
+  public void removeNodes(String[] labels) {
+    Objects.requireNonNull(labels, "labels");
+
+    for (String label : labels) {
+      validateLabel(label);
+      if (!nodes.contains(label)) {
+        throw new IllegalArgumentException("Node does not exist: " + label);
+      }
+    }
+
+    for (String label : labels) {
+      removeNode(label);
+    }
+  }
+
+  public void removeEdge(String srcLabel, String dstLabel) {
+    validateLabel(srcLabel);
+    validateLabel(dstLabel);
+
+    DirectedEdge edge = new DirectedEdge(srcLabel, dstLabel);
+    if (!edges.contains(edge)) {
+      throw new IllegalArgumentException("Edge does not exist: " + srcLabel + " -> " + dstLabel);
+    }
+
+    edges.remove(edge);
   }
 
   public Set<String> getNodes() {
