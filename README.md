@@ -39,4 +39,4 @@ The plain text out put is
 
 and the image should be
 
-![Alt text](out/graph.png)
+![Alt text](graph.png)
