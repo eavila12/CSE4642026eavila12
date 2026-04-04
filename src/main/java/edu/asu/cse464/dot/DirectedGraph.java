@@ -1,6 +1,14 @@
 package edu.asu.cse464.dot;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public final class DirectedGraph {
   private final LinkedHashSet<String> nodes = new LinkedHashSet<>();
@@ -75,7 +83,6 @@ public final class DirectedGraph {
     return new Node(label);
   }
 
-  // DFS branch API required by Part 2
   public Path GraphSearch(Node src, Node dst) {
     Objects.requireNonNull(src, "src");
     Objects.requireNonNull(dst, "dst");
@@ -186,7 +193,9 @@ public final class DirectedGraph {
 
   private static String escapeId(String id) {
     boolean simple = id.matches("[A-Za-z_][A-Za-z0-9_]*");
-    if (simple) return id;
+    if (simple) {
+      return id;
+    }
     String escaped = id.replace("\\", "\\\\").replace("\"", "\\\"");
     return "\"" + escaped + "\"";
   }
