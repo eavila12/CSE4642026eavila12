@@ -1,9 +1,0 @@
-digraph G {
-  a;
-  b;
-  c;
-  "node x";
-  a -> b;
-  b -> c;
-  "node x" -> c;
-}
