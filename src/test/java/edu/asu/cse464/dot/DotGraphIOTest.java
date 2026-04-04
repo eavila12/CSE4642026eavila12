@@ -7,7 +7,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class DotGraphIOTest {
   @TempDir
@@ -105,7 +110,7 @@ final class DotGraphIOTest {
     g.addNode("b");
 
     assertThrows(IllegalArgumentException.class, () -> g.removeNode("z"));
-    assertThrows(IllegalArgumentException.class, () -> g.removeNodes(new String[]{"a", "z"}));
+    assertThrows(IllegalArgumentException.class, () -> g.removeNodes(new String[] {"a", "z"}));
   }
 
   @Test
@@ -116,5 +121,30 @@ final class DotGraphIOTest {
 
     assertThrows(IllegalArgumentException.class, () -> g.removeEdge("a", "b"));
     assertThrows(IllegalArgumentException.class, () -> g.removeEdge("x", "y"));
+  }
+
+  @Test
+  void bfs_graph_search_finds_a_path() {
+    DirectedGraph g = new DirectedGraph();
+    g.addEdge("a", "b");
+    g.addEdge("a", "c");
+    g.addEdge("b", "d");
+    g.addEdge("c", "d");
+
+    edu.asu.cse464.dot.Path path = g.GraphSearch(g.getNode("a"), g.getNode("d"));
+
+    assertNotNull(path);
+    assertEquals("a -> b -> d", path.toString());
+  }
+
+  @Test
+  void bfs_graph_search_returns_null_when_unreachable() {
+    DirectedGraph g = new DirectedGraph();
+    g.addEdge("a", "b");
+    g.addNode("z");
+
+    edu.asu.cse464.dot.Path path = g.GraphSearch(g.getNode("a"), g.getNode("z"));
+
+    assertNull(path);
   }
 }
