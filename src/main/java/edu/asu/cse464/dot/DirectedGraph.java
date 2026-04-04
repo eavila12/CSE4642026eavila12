@@ -67,6 +67,78 @@ public final class DirectedGraph {
     edges.remove(edge);
   }
 
+  public Node getNode(String label) {
+    validateLabel(label);
+    if (!nodes.contains(label)) {
+      throw new IllegalArgumentException("Node does not exist: " + label);
+    }
+    return new Node(label);
+  }
+
+  public Path GraphSearch(Node src, Node dst) {
+    Objects.requireNonNull(src, "src");
+    Objects.requireNonNull(dst, "dst");
+
+    if (!nodes.contains(src.label()) || !nodes.contains(dst.label())) {
+      throw new IllegalArgumentException("Both nodes must exist in graph.");
+    }
+
+    Queue<String> queue = new ArrayDeque<>();
+    Set<String> visited = new HashSet<>();
+    Map<String, String> parent = new HashMap<>();
+
+    queue.add(src.label());
+    visited.add(src.label());
+
+    while (!queue.isEmpty()) {
+      String current = queue.remove();
+      if (current.equals(dst.label())) {
+        return buildPath(parent, src.label(), dst.label());
+      }
+
+      for (String neighbor : getNeighbors(current)) {
+        if (!visited.contains(neighbor)) {
+          visited.add(neighbor);
+          parent.put(neighbor, current);
+          queue.add(neighbor);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private Path buildPath(Map<String, String> parent, String src, String dst) {
+    List<Node> pathNodes = new ArrayList<>();
+    String current = dst;
+
+    while (current != null) {
+      pathNodes.add(new Node(current));
+      if (current.equals(src)) {
+        break;
+      }
+      current = parent.get(current);
+    }
+
+    Collections.reverse(pathNodes);
+
+    if (!pathNodes.get(0).label().equals(src)) {
+      return null;
+    }
+
+    return new Path(pathNodes);
+  }
+
+  private List<String> getNeighbors(String label) {
+    List<String> neighbors = new ArrayList<>();
+    for (DirectedEdge edge : edges) {
+      if (edge.src().equals(label)) {
+        neighbors.add(edge.dst());
+      }
+    }
+    return neighbors;
+  }
+
   public Set<String> getNodes() {
     return Collections.unmodifiableSet(nodes);
   }
