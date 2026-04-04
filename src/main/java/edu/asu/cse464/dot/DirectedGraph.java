@@ -1,14 +1,6 @@
 package edu.asu.cse464.dot;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public final class DirectedGraph {
   private final LinkedHashSet<String> nodes = new LinkedHashSet<>();
@@ -83,14 +75,48 @@ public final class DirectedGraph {
     return new Node(label);
   }
 
-  public Path GraphSearch(Node src, Node dst) {
+  public Path GraphSearch(Node src, Node dst, Algorithm algo) {
     Objects.requireNonNull(src, "src");
     Objects.requireNonNull(dst, "dst");
+    Objects.requireNonNull(algo, "algo");
 
     if (!nodes.contains(src.label()) || !nodes.contains(dst.label())) {
       throw new IllegalArgumentException("Both nodes must exist in graph.");
     }
 
+    return switch (algo) {
+      case BFS -> bfsSearch(src, dst);
+      case DFS -> dfsSearch(src, dst);
+    };
+  }
+
+  private Path bfsSearch(Node src, Node dst) {
+    Queue<String> queue = new ArrayDeque<>();
+    Set<String> visited = new HashSet<>();
+    Map<String, String> parent = new HashMap<>();
+
+    queue.add(src.label());
+    visited.add(src.label());
+
+    while (!queue.isEmpty()) {
+      String current = queue.remove();
+      if (current.equals(dst.label())) {
+        return buildPath(parent, src.label(), dst.label());
+      }
+
+      for (String neighbor : getNeighbors(current)) {
+        if (!visited.contains(neighbor)) {
+          visited.add(neighbor);
+          parent.put(neighbor, current);
+          queue.add(neighbor);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private Path dfsSearch(Node src, Node dst) {
     Set<String> visited = new HashSet<>();
     Map<String, String> parent = new HashMap<>();
 
@@ -135,7 +161,7 @@ public final class DirectedGraph {
 
     Collections.reverse(pathNodes);
 
-    if (pathNodes.isEmpty() || !pathNodes.get(0).label().equals(src)) {
+    if (!pathNodes.get(0).label().equals(src)) {
       return null;
     }
 
@@ -193,9 +219,7 @@ public final class DirectedGraph {
 
   private static String escapeId(String id) {
     boolean simple = id.matches("[A-Za-z_][A-Za-z0-9_]*");
-    if (simple) {
-      return id;
-    }
+    if (simple) return id;
     String escaped = id.replace("\\", "\\\\").replace("\"", "\\\"");
     return "\"" + escaped + "\"";
   }
