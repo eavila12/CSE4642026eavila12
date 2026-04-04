@@ -73,8 +73,6 @@ public final class DirectedGraph {
     edges.remove(edge);
   }
 
-<<<<<<< Updated upstream
-=======
   public Node getNode(String label) {
     validateLabel(label);
     if (!nodes.contains(label)) {
@@ -180,7 +178,6 @@ public final class DirectedGraph {
     return neighbors;
   }
 
->>>>>>> Stashed changes
   public Set<String> getNodes() {
     return Collections.unmodifiableSet(nodes);
   }
