@@ -75,14 +75,22 @@ public final class DirectedGraph {
     return new Node(label);
   }
 
-  public Path GraphSearch(Node src, Node dst) {
+  public Path GraphSearch(Node src, Node dst, Algorithm algo) {
     Objects.requireNonNull(src, "src");
     Objects.requireNonNull(dst, "dst");
+    Objects.requireNonNull(algo, "algo");
 
     if (!nodes.contains(src.label()) || !nodes.contains(dst.label())) {
       throw new IllegalArgumentException("Both nodes must exist in graph.");
     }
 
+    return switch (algo) {
+      case BFS -> bfsSearch(src, dst);
+      case DFS -> dfsSearch(src, dst);
+    };
+  }
+
+  private Path bfsSearch(Node src, Node dst) {
     Queue<String> queue = new ArrayDeque<>();
     Set<String> visited = new HashSet<>();
     Map<String, String> parent = new HashMap<>();
@@ -106,6 +114,37 @@ public final class DirectedGraph {
     }
 
     return null;
+  }
+
+  private Path dfsSearch(Node src, Node dst) {
+    Set<String> visited = new HashSet<>();
+    Map<String, String> parent = new HashMap<>();
+
+    boolean found = dfs(src.label(), dst.label(), visited, parent);
+    if (!found) {
+      return null;
+    }
+
+    return buildPath(parent, src.label(), dst.label());
+  }
+
+  private boolean dfs(String current, String target, Set<String> visited, Map<String, String> parent) {
+    visited.add(current);
+
+    if (current.equals(target)) {
+      return true;
+    }
+
+    for (String neighbor : getNeighbors(current)) {
+      if (!visited.contains(neighbor)) {
+        parent.put(neighbor, current);
+        if (dfs(neighbor, target, visited, parent)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   private Path buildPath(Map<String, String> parent, String src, String dst) {
