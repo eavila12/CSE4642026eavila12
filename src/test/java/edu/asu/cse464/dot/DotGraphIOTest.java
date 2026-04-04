@@ -123,7 +123,7 @@ final class DotGraphIOTest {
     assertThrows(IllegalArgumentException.class, () -> g.removeEdge("x", "y"));
   }
 
-   @Test
+  @Test
   void graph_search_bfs_finds_a_path() {
     DirectedGraph g = new DirectedGraph();
     g.addEdge("a", "b");
@@ -131,7 +131,7 @@ final class DotGraphIOTest {
     g.addEdge("b", "d");
     g.addEdge("c", "d");
 
-    Path path = g.GraphSearch(g.getNode("a"), g.getNode("d"), Algorithm.BFS);
+    edu.asu.cse464.dot.Path path = g.GraphSearch(g.getNode("a"), g.getNode("d"), Algorithm.BFS);
 
     assertNotNull(path);
     assertEquals("a -> b -> d", path.toString());
@@ -144,7 +144,7 @@ final class DotGraphIOTest {
     g.addEdge("b", "d");
     g.addEdge("a", "c");
 
-    Path path = g.GraphSearch(g.getNode("a"), g.getNode("d"), Algorithm.DFS);
+    edu.asu.cse464.dot.Path path = g.GraphSearch(g.getNode("a"), g.getNode("d"), Algorithm.DFS);
 
     assertNotNull(path);
     assertEquals("a -> b -> d", path.toString());
