@@ -77,4 +77,44 @@ final class DotGraphIOTest {
     assertTrue(Files.exists(pngOut));
     assertTrue(Files.size(pngOut) > 0);
   }
+
+  @Test
+  void part2_remove_some_nodes_and_edges_successfully() {
+    DirectedGraph g = new DirectedGraph();
+    g.addEdge("a", "b");
+    g.addEdge("b", "c");
+    g.addEdge("a", "c");
+    g.addNode("d");
+
+    g.removeEdge("a", "c");
+    g.removeNode("b");
+
+    assertFalse(g.getEdges().contains(new DirectedEdge("a", "c")));
+    assertFalse(g.getNodes().contains("b"));
+    assertFalse(g.getEdges().contains(new DirectedEdge("a", "b")));
+    assertFalse(g.getEdges().contains(new DirectedEdge("b", "c")));
+    assertTrue(g.getNodes().contains("a"));
+    assertTrue(g.getNodes().contains("c"));
+    assertTrue(g.getNodes().contains("d"));
+  }
+
+  @Test
+  void part2_remove_nodes_that_do_not_exist_should_throw() {
+    DirectedGraph g = new DirectedGraph();
+    g.addNode("a");
+    g.addNode("b");
+
+    assertThrows(IllegalArgumentException.class, () -> g.removeNode("z"));
+    assertThrows(IllegalArgumentException.class, () -> g.removeNodes(new String[]{"a", "z"}));
+  }
+
+  @Test
+  void part2_remove_edges_that_do_not_exist_should_throw() {
+    DirectedGraph g = new DirectedGraph();
+    g.addNode("a");
+    g.addNode("b");
+
+    assertThrows(IllegalArgumentException.class, () -> g.removeEdge("a", "b"));
+    assertThrows(IllegalArgumentException.class, () -> g.removeEdge("x", "y"));
+  }
 }
