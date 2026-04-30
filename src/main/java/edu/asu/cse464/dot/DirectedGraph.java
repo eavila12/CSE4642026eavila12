@@ -71,11 +71,6 @@ public final class DirectedGraph {
         return new Node(label);
     }
 
-    public Path GraphSearch(Node src, Node dst, Algorithm algo) {
-        Objects.requireNonNull(algo, "algo");
-        return SearchStrategyFactory.create(this, algo).search(src, dst);
-    }
-
     public boolean containsNode(String label) {
         return nodes.contains(label);
     }
