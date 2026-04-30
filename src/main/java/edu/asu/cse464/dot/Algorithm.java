@@ -1,6 +1,7 @@
 package edu.asu.cse464.dot;
 
 public enum Algorithm {
-  BFS,
-  DFS
+    BFS,
+    DFS,
+    RANDOM_WALK
 }
