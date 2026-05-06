@@ -1,5 +1,6 @@
 package edu.asu.cse464.dot;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class App {
@@ -15,6 +16,8 @@ public final class App {
         Path input = Path.of(args[0]);
         Path outDir = Path.of(args[1]);
 
+        Files.createDirectories(outDir);
+
         DirectedGraph graph = DotGraphIO.parseGraph(input.toString());
 
         System.out.println(graph);
@@ -22,18 +25,17 @@ public final class App {
         DotGraphIO.outputDOTGraph(outDir.resolve("graph.dot").toString(), graph);
         DotGraphIO.outputGraphics(outDir.resolve("graph.png").toString(), "png", graph);
 
-        runSearches(graph);
-    }
+        Node src = graph.getNode("a");
+        Node dst = graph.getNode("h");
 
-    private static void runSearches(DirectedGraph graph) {
-        Node a = graph.getNode("a");
-        Node c = graph.getNode("c");
-
-        System.out.println("BFS: " + graph.GraphSearch(a, c, Algorithm.BFS));
-        System.out.println("DFS: " + graph.GraphSearch(a, c, Algorithm.DFS));
+        System.out.println("BFS a -> h: " + graph.GraphSearch(src, dst, Algorithm.BFS));
+        System.out.println("DFS a -> h: " + graph.GraphSearch(src, dst, Algorithm.DFS));
 
         for (int i = 1; i <= 5; i++) {
-            System.out.println("Random walk run " + i + ": " + graph.GraphSearch(a, c, Algorithm.RANDOM_WALK));
+            System.out.println(
+                "Random walk a -> h run " + i + ": "
+                    + graph.GraphSearch(src, dst, Algorithm.RANDOM_WALK)
+            );
         }
     }
 }
